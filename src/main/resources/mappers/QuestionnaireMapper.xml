@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="united.cn.suscc.dao.QuestionnaireMapper">
+    <resultMap id="QuestionnaireResultMap" type="united.cn.suscc.domain.entities.Questionnaire">
+        <id property="id" column="id"/>
+        <result property="email" column="email"/>
+        <result property="visaType" column="visa_type"/>
+        <result property="applicationLocation" column="application_location"/>
+        <result property="currentResidence" column="current_residence"/>
+        <result property="currentPassportCountry" column="current_passport_country"/>
+        <result property="gender" column="gender"/>
+        <result property="applicationStartDate" column="application_start_date"/>
+        <result property="applicationEndDate" column="application_end_date"/>
+        <result property="separatedWithFamily" column="separated_with_family"/>
+        <result property="separationWithFamilyInDays" column="separation_with_family_in_days"/>
+        <result property="delayedEnrollment" column="delayed_enrollment"/>
+        <result property="unableToChangeJob" column="unable_to_change_job"/>
+        <result property="missedAnniversariesCount" column="missed_anniversaries_count"/>
+        <result property="noNewsFromIrccInDays" column="no_news_from_ircc_in_days"/>
+    </resultMap>
+
+    <insert id="insert">
+        INSERT INTO questionnaire
+        (email,
+         visa_type,
+         application_location,
+         current_residence,
+         current_passport_country,
+         gender,
+         application_start_date,
+         application_end_date,
+         separated_with_family,
+         separation_with_family_in_days,
+         delayed_enrollment,
+         unable_to_change_job,
+         missed_anniversaries_count,
+         no_news_from_ircc_in_days)
+        VALUES (#{email},
+                #{visaType},
+                #{applicationLocation},
+                #{currentResidence},
+                #{currentPassportCountry},
+                #{gender},
+                #{applicationStartDate},
+                #{applicationEndDate},
+                #{separatedWithFamily},
+                #{separationWithFamilyInDays},
+                #{delayedEnrollment},
+                #{unableToChangeJob},
+                #{missedAnniversariesCount},
+                #{noNewsFromIrccInDays})
+    </insert>
+
+    <select id="getAverageWaitingDays" resultType="long">
+        SELECT AVG(DATEDIFF(application_start_date, IFNULL(application_end_date, NOW()))) FROM questionnaire
+    </select>
+</mapper>
