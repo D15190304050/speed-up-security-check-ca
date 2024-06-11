@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import united.cn.suscc.dao.QuestionnaireMapper;
 import united.cn.suscc.domain.dtos.QuestionnaireInfo;
-import united.cn.suscc.domain.dtos.ServiceResponse;
-import united.cn.suscc.domain.entities.Questionnaire;
+import united.cn.suscc.commons.ServiceResponse;
+import united.cn.suscc.domain.entities.QuestionnaireResult;
 
 @Slf4j
 @Service
@@ -18,9 +18,9 @@ public class QuestionnaireService
 
     public ServiceResponse<Boolean> submitQuestionnaire(QuestionnaireInfo questionnaireInfo)
     {
-        Questionnaire questionnaire = new Questionnaire();
-        BeanUtils.copyProperties(questionnaireInfo, questionnaire);
-        questionnaireMapper.insert(questionnaire);
+        QuestionnaireResult questionnaireResult = new QuestionnaireResult();
+        BeanUtils.copyProperties(questionnaireInfo, questionnaireResult);
+        questionnaireMapper.insert(questionnaireResult);
 
         return ServiceResponse.buildSuccessResponse(true);
     }

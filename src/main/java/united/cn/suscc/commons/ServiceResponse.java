@@ -1,6 +1,4 @@
-package united.cn.suscc.domain.dtos;
-
-import united.cn.suscc.commons.JsonSerializer;
+package united.cn.suscc.commons;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;

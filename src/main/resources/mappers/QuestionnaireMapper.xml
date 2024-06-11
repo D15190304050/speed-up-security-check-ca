@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="united.cn.suscc.dao.QuestionnaireMapper">
-    <resultMap id="QuestionnaireResultMap" type="united.cn.suscc.domain.entities.Questionnaire">
+    <resultMap id="QuestionnaireResultMap" type="united.cn.suscc.domain.entities.QuestionnaireResult">
         <id property="id" column="id"/>
         <result property="email" column="email"/>
         <result property="visaType" column="visa_type"/>
-        <result property="applicationLocation" column="application_location"/>
+        <result property="applicationSubmissionLocation" column="application_location"/>
         <result property="currentResidence" column="current_residence"/>
         <result property="currentPassportCountry" column="current_passport_country"/>
         <result property="gender" column="gender"/>
@@ -20,7 +20,7 @@
     </resultMap>
 
     <insert id="insert">
-        INSERT INTO questionnaire
+        INSERT INTO questionnaireResult
         (email,
          visa_type,
          application_location,
@@ -52,6 +52,6 @@
     </insert>
 
     <select id="getAverageWaitingDays" resultType="long">
-        SELECT AVG(DATEDIFF(application_start_date, IFNULL(application_end_date, NOW()))) FROM questionnaire
+        SELECT AVG(DATEDIFF(application_start_date, IFNULL(application_end_date, NOW()))) FROM questionnaireResult
     </select>
 </mapper>

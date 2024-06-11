@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import united.cn.suscc.domain.dtos.QuestionnaireInfo;
-import united.cn.suscc.domain.dtos.ServiceResponse;
+import united.cn.suscc.commons.ServiceResponse;
 import united.cn.suscc.services.QuestionnaireService;
 
 @Slf4j
@@ -25,4 +25,6 @@ public class QuestionnaireController
     {
         return questionnaireService.getAverageWaitingDays();
     }
+
+
 }
