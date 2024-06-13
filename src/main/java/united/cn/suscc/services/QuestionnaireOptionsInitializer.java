@@ -16,7 +16,7 @@ import java.util.List;
 public class QuestionnaireOptionsInitializer implements ApplicationContextAware, ApplicationListener<WebServerInitializedEvent>
 {
     @Autowired
-    private QuestionnaireOptionService1 questionnaireOptionService;
+    private QuestionnaireOptionsService questionnaireOptionService;
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException
