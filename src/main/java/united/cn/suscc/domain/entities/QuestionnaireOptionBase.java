@@ -8,5 +8,5 @@ public class QuestionnaireOptionBase
     private long id;
     private String locale;
     private int code;
-    private String option;
+    private String optionText;
 }

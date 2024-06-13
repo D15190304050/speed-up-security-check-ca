@@ -1,5 +1,7 @@
 package united.cn.suscc.preparation;
 
+import united.cn.suscc.constants.LocaleCodes;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -15,22 +17,13 @@ public class SqlInsertionExtractor
     public static final String RESULT_SQL_FILE_NAME = "result.sql";
     public static final String OPTIONS_DIRECTORY_NAME = "options/";
     public static final String CONFIGURATION_FILE_NAME = "application.yaml";
-    public static final String OTHER = "Other";
+    public static final String OTHER = "other";
 
     private static final String[] ORDERED_LOCALES = {"en-us", "fr-fr", "zh-cn"};
 
     public static void main(String[] args) throws IOException
     {
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-
-        URL resource = classLoader.getResource(CONFIGURATION_FILE_NAME);
-        if (resource == null)
-            throw new FileNotFoundException("File " + CONFIGURATION_FILE_NAME + " not found.");
-
-        String configurationFilePath = resource.getPath();
-        int lastIndexOfSlash = configurationFilePath.lastIndexOf("/");
-        String resourcesDirectoryPath = configurationFilePath.substring(0, lastIndexOfSlash + 1);
-        String optionsDirectoryPath = resourcesDirectoryPath + OPTIONS_DIRECTORY_NAME;
+        String optionsDirectoryPath = getOptionsDirectoryPath();
 
         File optionsDirectory = new File(optionsDirectoryPath);
         File[] optionFiles = optionsDirectory.listFiles();
@@ -57,13 +50,27 @@ public class SqlInsertionExtractor
         writer.close();
     }
 
+    private static String getOptionsDirectoryPath() throws FileNotFoundException
+    {
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+
+        URL resource = classLoader.getResource(CONFIGURATION_FILE_NAME);
+        if (resource == null)
+            throw new FileNotFoundException("File " + CONFIGURATION_FILE_NAME + " not found.");
+
+        String configurationFilePath = resource.getPath();
+        int lastIndexOfSlash = configurationFilePath.lastIndexOf("/");
+        String resourcesDirectoryPath = configurationFilePath.substring(0, lastIndexOfSlash + 1);
+        return resourcesDirectoryPath + OPTIONS_DIRECTORY_NAME;
+    }
+
     private static StringBuilder getCmdInsertionForTable(File optionFile, String fileName) throws FileNotFoundException
     {
         int lastIndexOfFileNameSuffix = fileName.lastIndexOf(FILE_NAME_SUFFIX);
         String tableName = fileName.substring(FILE_NAME_PREFIX.length(), lastIndexOfFileNameSuffix);
 
         StringBuilder cmdInsertion = new StringBuilder("INSERT INTO `" + tableName + "`\n" +
-                "(`locale`, `code`, `option`)\n" +
+                "(`locale`, `code`, `option_text`)\n" +
                 "VALUES");
 
         int code = 1;
@@ -75,10 +82,10 @@ public class SqlInsertionExtractor
             String optionLine = input.nextLine();
             String[] options = optionLine.split(",");
 
-            int nextCode = OTHER.equalsIgnoreCase(options[0]) ? -1 : code;
+            int nextCode = options[0].toLowerCase().startsWith(OTHER) ? -1 : code;
 
-            for (int i = 0; i < ORDERED_LOCALES.length; i++)
-                cmdInsertion.append(String.format("\n('%s', %d, '%s'),", ORDERED_LOCALES[i], nextCode, options[i].replace("'", "\\'")));
+            for (int i = 0; i < LocaleCodes.ORDERED_LOCALES.length; i++)
+                cmdInsertion.append(String.format("\n('%s', %d, '%s'),", LocaleCodes.ORDERED_LOCALES[i], nextCode, options[i].replace("'", "\\'")));
 
             code++;
         }

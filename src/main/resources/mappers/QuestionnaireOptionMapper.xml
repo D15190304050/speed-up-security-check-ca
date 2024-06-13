@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="united.cn.suscc.dao.QuestionnaireOptionMapper">
+
+    <resultMap id="ApplicationStateResultMap" type="united.cn.suscc.domain.entities.ApplicationState">
+        <id property="id" column="id"/>
+        <result property="locale" column="locale"/>
+        <result property="code" column="code"/>
+        <result property="optionText" column="option_text"/>
+    </resultMap>
+
+    <resultMap id="ApplicationSubmissionLocationResultMap" type="united.cn.suscc.domain.entities.ApplicationSubmissionLocation">
+        <id property="id" column="id"/>
+        <result property="locale" column="locale"/>
+        <result property="code" column="code"/>
+        <result property="optionText" column="option_text"/>
+    </resultMap>
+
+    <resultMap id="ApplicationTypeResultMap" type="united.cn.suscc.domain.entities.ApplicationType">
+        <id property="id" column="id"/>
+        <result property="locale" column="locale"/>
+        <result property="code" column="code"/>
+        <result property="optionText" column="option_text"/>
+    </resultMap>
+
+    <resultMap id="CountryOfResidenceResultMap" type="united.cn.suscc.domain.entities.CountryOfResidence">
+        <id property="id" column="id"/>
+        <result property="locale" column="locale"/>
+        <result property="code" column="code"/>
+        <result property="optionText" column="option_text"/>
+    </resultMap>
+
+    <resultMap id="CurrentPassportCountryResultMap" type="united.cn.suscc.domain.entities.CurrentPassportCountry">
+        <id property="id" column="id"/>
+        <result property="locale" column="locale"/>
+        <result property="code" column="code"/>
+        <result property="optionText" column="option_text"/>
+    </resultMap>
+
+    <resultMap id="GenderResultMap" type="united.cn.suscc.domain.entities.Gender">
+        <id property="id" column="id"/>
+        <result property="locale" column="locale"/>
+        <result property="code" column="code"/>
+        <result property="optionText" column="option_text"/>
+    </resultMap>
+
+    <select id="getAllApplicationStates" resultMap="ApplicationStateResultMap">
+        SELECT `locale`,
+               `code`,
+               `option_text`
+        FROM `application_state`
+    </select>
+
+    <select id="getAllApplicationSubmissionLocations" resultMap="ApplicationSubmissionLocationResultMap">
+        SELECT `locale`,
+               `code`,
+               `option_text`
+        FROM `application_submission_location`
+    </select>
+
+    <select id="getAllApplicationTypes" resultMap="ApplicationTypeResultMap">
+        SELECT `locale`,
+               `code`,
+               `option_text`
+        FROM `application_type`
+    </select>
+
+    <select id="getAllCountriesOfResidence" resultMap="CountryOfResidenceResultMap">
+        SELECT `locale`,
+               `code`,
+               `option_text`
+        FROM `country_of_residence`
+    </select>
+
+    <select id="getAllCurrentPassportCountries" resultMap="CurrentPassportCountryResultMap">
+        SELECT `locale`,
+               `code`,
+               `option_text`
+        FROM `current_passport_country`
+    </select>
+
+    <select id="getAllGenders" resultMap="GenderResultMap">
+        SELECT `locale`,
+               `code`,
+               `option_text`
+        FROM `gender`
+    </select>
+</mapper>
