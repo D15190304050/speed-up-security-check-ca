@@ -14,4 +14,5 @@ public interface QuestionnaireOptionMapper
     List<CountryOfResidence> getAllCountriesOfResidence();
     List<CurrentPassportCountry> getAllCurrentPassportCountries();
     List<Gender> getAllGenders();
+    List<FamilyMember> getAllFamilyMembers();
 }

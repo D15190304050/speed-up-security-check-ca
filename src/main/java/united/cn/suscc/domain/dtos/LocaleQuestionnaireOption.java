@@ -14,4 +14,5 @@ public class LocaleQuestionnaireOption
     private List<QuestionnaireOption> countriesOfResidence;
     private List<QuestionnaireOption> currentPassportCountries;
     private List<QuestionnaireOption> genders;
+    private List<QuestionnaireOption> familyMembers;
 }

@@ -16,7 +16,7 @@ public class QuestionnaireResult
     /**
      * Email of the user.
      */
-    private String email;
+    private String emailAddress;
 
     /**
      * Application type.
@@ -41,7 +41,7 @@ public class QuestionnaireResult
     /**
      * Current country of residence if not listed (select "Other").
      */
-    private String currentResidenceIfOther;
+    private String countryOfResidenceIfOther;
 
     /**
      * Current country of the passport.
@@ -96,17 +96,17 @@ public class QuestionnaireResult
     /**
      * Family members separated from the applicant.
      */
-    private String separationWithFamilyMember;
+    private Integer separateFamilyMembers;
 
     /**
      * How long is the applicant separated from family, in months.
      */
-    private long separationWithFamilyInMonths;
+    private Long separationWithFamilyInMonths;
 
     /**
      * Is the enrollment delayed?
      */
-    private Boolean delayedEnrollment;
+    private boolean delayedEnrollment;
 
     /**
      * The original school start date.
@@ -121,7 +121,7 @@ public class QuestionnaireResult
     /**
      * Is the applicant unable to change the job?
      */
-    private Boolean unableToChangeJob;
+    private boolean unableToChangeJob;
 
     /**
      * Current annual salary (in Canadian dollars).

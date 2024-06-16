@@ -3,55 +3,89 @@
 <mapper namespace="united.cn.suscc.dao.QuestionnaireMapper">
     <resultMap id="QuestionnaireResultMap" type="united.cn.suscc.domain.entities.QuestionnaireResult">
         <id property="id" column="id"/>
-        <result property="email" column="email"/>
-        <result property="visaType" column="visa_type"/>
-        <result property="applicationSubmissionLocation" column="application_location"/>
-        <result property="currentResidence" column="current_residence"/>
+        <result property="emailAddress" column="email_address"/>
+        <result property="applicationType" column="application_type"/>
+        <result property="applicationSubmissionLocation" column="application_submission_location"/>
+        <result property="applicationSubmissionLocationIfOther" column="application_submission_location_if_other"/>
+        <result property="countryOfResidence" column="country_of_residence"/>
+        <result property="countryOfResidenceIfOther" column="country_of_residence_if_other"/>
         <result property="currentPassportCountry" column="current_passport_country"/>
+        <result property="currentPassportCountryIfOther" column="current_passport_country_if_other"/>
         <result property="gender" column="gender"/>
-        <result property="applicationStartDate" column="application_start_date"/>
+        <result property="genderIfOther" column="gender_if_other"/>
+        <result property="applicationSubmissionDate" column="application_submission_date"/>
         <result property="applicationEndDate" column="application_end_date"/>
+        <result property="dateOfEnteringSecurityScreening" column="date_of_entering_security_screening"/>
+        <result property="dateOfClearingSecurityScreening" column="date_of_clearing_security_screening"/>
+        <result property="currentApplicationState" column="current_application_state"/>
         <result property="separatedWithFamily" column="separated_with_family"/>
-        <result property="separationWithFamilyInDays" column="separation_with_family_in_days"/>
+        <result property="separateFamilyMembers" column="separate_family_members"/>
+        <result property="separationWithFamilyInMonths" column="separation_with_family_in_months"/>
         <result property="delayedEnrollment" column="delayed_enrollment"/>
+        <result property="originalSchoolStartDate" column="original_school_start_date"/>
+        <result property="originalSchoolEndDate" column="original_school_end_date"/>
         <result property="unableToChangeJob" column="unable_to_change_job"/>
-        <result property="missedAnniversariesCount" column="missed_anniversaries_count"/>
-        <result property="noNewsFromIrccInDays" column="no_news_from_ircc_in_days"/>
+        <result property="currentSalaryInCad" column="current_salary_in_cad"/>
+        <result property="estimatedSalaryInCad" column="estimated_salary_in_cad"/>
+        <result property="lastUpdateDateFromIrcc" column="last_update_date_from_ircc"/>
     </resultMap>
 
     <insert id="insert">
-        INSERT INTO questionnaireResult
-        (email,
-         visa_type,
-         application_location,
-         current_residence,
+        INSERT INTO `questionnaire_result`
+        (email_address,
+         application_type,
+         application_submission_location,
+         application_submission_location_if_other,
+         country_of_residence,
+         country_of_residence_if_other,
          current_passport_country,
+         current_passport_country_if_other,
          gender,
-         application_start_date,
+         gender_if_other,
+         application_submission_date,
          application_end_date,
+         date_of_entering_security_screening,
+         date_of_clearing_security_screening,
+         current_application_state,
          separated_with_family,
-         separation_with_family_in_days,
+         separate_family_members,
+         separation_with_family_in_months,
          delayed_enrollment,
+         original_school_start_date,
+         original_school_end_date,
          unable_to_change_job,
-         missed_anniversaries_count,
-         no_news_from_ircc_in_days)
-        VALUES (#{email},
-                #{visaType},
-                #{applicationLocation},
-                #{currentResidence},
+         current_salary_in_cad,
+         estimated_salary_in_cad,
+         last_update_date_from_ircc)
+        VALUES (#{emailAddress},
+                #{applicationType},
+                #{applicationSubmissionLocation},
+                #{applicationSubmissionLocationIfOther},
+                #{countryOfResidence},
+                #{countryOfResidenceIfOther},
                 #{currentPassportCountry},
+                #{currentPassportCountryIfOther},
                 #{gender},
-                #{applicationStartDate},
+                #{genderIfOther},
+                #{applicationSubmissionDate},
                 #{applicationEndDate},
+                #{dateOfEnteringSecurityScreening},
+                #{dateOfClearingSecurityScreening},
+                #{currentApplicationState},
                 #{separatedWithFamily},
-                #{separationWithFamilyInDays},
+                #{separateFamilyMembers},
+                #{separationWithFamilyInMonths},
                 #{delayedEnrollment},
+                #{originalSchoolStartDate},
+                #{originalSchoolEndDate},
                 #{unableToChangeJob},
-                #{missedAnniversariesCount},
-                #{noNewsFromIrccInDays})
+                #{currentSalaryInCad},
+                #{estimatedSalaryInCad},
+                #{lastUpdateDateFromIrcc})
     </insert>
 
     <select id="getAverageWaitingDays" resultType="long">
-        SELECT AVG(DATEDIFF(application_start_date, IFNULL(application_end_date, NOW()))) FROM questionnaireResult
+        SELECT AVG(DATEDIFF(`application_submission_date`, IFNULL(`application_end_date`, NOW())))
+        FROM `questionnaire_result`
     </select>
 </mapper>

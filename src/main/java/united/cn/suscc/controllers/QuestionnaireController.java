@@ -2,10 +2,7 @@ package united.cn.suscc.controllers;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import united.cn.suscc.domain.dtos.LocaleQuestionnaireOption;
 import united.cn.suscc.domain.dtos.QuestionnaireInfo;
 import united.cn.suscc.commons.ServiceResponse;
@@ -26,14 +23,15 @@ public class QuestionnaireController
     private QuestionnaireOptionsService questionnaireOptionsService;
 
     @PostMapping("/submit")
-    public ServiceResponse<Boolean> submitQuestionnaire(QuestionnaireInfo questionnaireInfo)
+    public ServiceResponse<Boolean> submitQuestionnaire(@RequestBody QuestionnaireInfo questionnaireInfo)
     {
         return questionnaireService.submitQuestionnaire(questionnaireInfo);
     }
 
-    public ServiceResponse<Long> getAverageWaitingDays()
+    @GetMapping("/statistics")
+    public ServiceResponse<Long> getStatisticsData()
     {
-        return questionnaireService.getAverageWaitingDays();
+        return questionnaireService.getStatisticsData();
     }
 
     @GetMapping("/options")

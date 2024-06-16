@@ -27,7 +27,7 @@ public class QuestionnaireOptionsInitializer implements ApplicationContextAware,
     @Override
     public void onApplicationEvent(WebServerInitializedEvent event)
     {
-        List<LocaleQuestionnaireOption> allOptions = questionnaireOptionService.getAllOptions();
+        List<LocaleQuestionnaireOption> allOptions = questionnaireOptionService.getAllOptionsFromDb();
         QuestionnaireOptionsHolder.setLocaleQuestionnaireOptions(allOptions);
     }
 }

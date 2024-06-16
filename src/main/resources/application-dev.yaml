@@ -2,6 +2,6 @@ spring:
     datasource:
         druid:
             driver-class-name: com.mysql.cj.jdbc.Driver
-            url: jdbc:mysql://localhost:3306/stella_search?useUnicode=true&characterEncoding=utf8
+            url: jdbc:mysql://localhost:3306/security_screening?useUnicode=true&characterEncoding=utf8
             username: DinoStark
             password: non-feeling

@@ -21,7 +21,7 @@ public class QuestionnaireOptionsService
     @Autowired
     private QuestionnaireOptionMapper questionnaireOptionMapper;
 
-    public List<LocaleQuestionnaireOption> getAllOptions()
+    public List<LocaleQuestionnaireOption> getAllOptionsFromDb()
     {
         List<ApplicationState> allApplicationStates = questionnaireOptionMapper.getAllApplicationStates();
         List<ApplicationSubmissionLocation> allApplicationSubmissionLocations = questionnaireOptionMapper.getAllApplicationSubmissionLocations();
@@ -29,6 +29,7 @@ public class QuestionnaireOptionsService
         List<CountryOfResidence> allCountriesOfResidence = questionnaireOptionMapper.getAllCountriesOfResidence();
         List<CurrentPassportCountry> allCurrentPassportCountries = questionnaireOptionMapper.getAllCurrentPassportCountries();
         List<Gender> allGenders = questionnaireOptionMapper.getAllGenders();
+        List<FamilyMember> allFamilyMembers = questionnaireOptionMapper.getAllFamilyMembers();
 
         List<LocaleQuestionnaireOption> localeQuestionnaireOptions = new ArrayList<>();
         for (String locale : LocaleCodes.ORDERED_LOCALES)
@@ -39,6 +40,7 @@ public class QuestionnaireOptionsService
             List<QuestionnaireOption> countriesOfResidenceOptions = filterByLocale(locale, allCountriesOfResidence);
             List<QuestionnaireOption> currentPassportCountriesOptions = filterByLocale(locale, allCurrentPassportCountries);
             List<QuestionnaireOption> gendersOptions = filterByLocale(locale, allGenders);
+            List<QuestionnaireOption> familyMemberOptions = filterByLocale(locale, allFamilyMembers);
 
             LocaleQuestionnaireOption localeQuestionnaireOption = new LocaleQuestionnaireOption();
             localeQuestionnaireOption.setLocale(locale);
@@ -48,6 +50,7 @@ public class QuestionnaireOptionsService
             localeQuestionnaireOption.setCountriesOfResidence(countriesOfResidenceOptions);
             localeQuestionnaireOption.setCurrentPassportCountries(currentPassportCountriesOptions);
             localeQuestionnaireOption.setGenders(gendersOptions);
+            localeQuestionnaireOption.setFamilyMembers(familyMemberOptions);
 
             localeQuestionnaireOptions.add(localeQuestionnaireOption);
         }

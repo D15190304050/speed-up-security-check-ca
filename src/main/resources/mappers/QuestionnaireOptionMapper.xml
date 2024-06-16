@@ -44,6 +44,13 @@
         <result property="optionText" column="option_text"/>
     </resultMap>
 
+    <resultMap id="FamilyMemberResultMap" type="united.cn.suscc.domain.entities.FamilyMember">
+        <id property="id" column="id"/>
+        <result property="locale" column="locale"/>
+        <result property="code" column="code"/>
+        <result property="optionText" column="option_text"/>
+    </resultMap>
+
     <select id="getAllApplicationStates" resultMap="ApplicationStateResultMap">
         SELECT `locale`,
                `code`,
@@ -84,5 +91,12 @@
                `code`,
                `option_text`
         FROM `gender`
+    </select>
+
+    <select id="getAllFamilyMembers" resultMap="FamilyMemberResultMap">
+        SELECT `locale`,
+               `code`,
+               `option_text`
+        FROM `family_member`
     </select>
 </mapper>
