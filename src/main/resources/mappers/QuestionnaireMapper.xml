@@ -28,6 +28,7 @@
         <result property="currentSalaryInCad" column="current_salary_in_cad"/>
         <result property="estimatedSalaryInCad" column="estimated_salary_in_cad"/>
         <result property="lastUpdateDateFromIrcc" column="last_update_date_from_ircc"/>
+        <result property="submissionDate" column="submission_date"/>
     </resultMap>
 
     <insert id="insert">
@@ -83,6 +84,12 @@
                 #{estimatedSalaryInCad},
                 #{lastUpdateDateFromIrcc})
     </insert>
+
+    <select id="countByEmail" resultType="long">
+        SELECT COUNT(*)
+        FROM `questionnaire_result`
+        WHERE email_address = #{emailAddress}
+    </select>
 
     <select id="getAverageWaitingDays" resultType="long">
         SELECT AVG(DATEDIFF(`application_submission_date`, IFNULL(`application_end_date`, NOW())))

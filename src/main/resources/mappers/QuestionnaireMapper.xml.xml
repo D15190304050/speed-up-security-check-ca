@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="united.cn.suscc.dao.EmailVerificationRecordMapper">
+    <resultMap id="BaseResultMap" type="united.cn.suscc.domain.entities.EmailVerificationRecord">
+        <id property="id" column="id"/>
+        <result property="emailAddress" column="email_address"/>
+        <result property="code" column="code"/>
+        <result property="creationTime" column="creation_time"/>
+        <result property="expirationTime" column="expiration_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="state" column="state"/>
+    </resultMap>
+
+    <insert id="insert">
+        INSERT INTO `email_verification_record`
+        (email_address,
+         code,
+         creation_time,
+         expiration_time,
+         update_time,
+         state)
+        VALUES (#{emailAddress},
+                #{code},
+                #{creationTime},
+                #{expirationTime},
+                #{updateTime},
+                #{state})
+    </insert>
+
+    <select id="getExpirationTimeByEmailAndCode" resultType="java.util.Date">
+        SELECT expiration_time
+        FROM `email_verification_record`
+        WHERE email_address = #{emailAddress}
+          AND code = #{code}
+    </select>
+</mapper>

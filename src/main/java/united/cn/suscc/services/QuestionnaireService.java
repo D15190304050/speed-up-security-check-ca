@@ -32,6 +32,7 @@ public class QuestionnaireService
         if (StringUtils.hasText(errorMessage))
             return ServiceResponse.buildErrorResponse(-100, errorMessage);
 
+        // Save to database.
         QuestionnaireResult questionnaireResult = new QuestionnaireResult();
         BeanUtils.copyProperties(questionnaireInfo, questionnaireResult);
         questionnaireMapper.insert(questionnaireResult);
@@ -39,13 +40,23 @@ public class QuestionnaireService
         return ServiceResponse.buildSuccessResponse(true);
     }
 
-    private static String validateQuestionnaireInfo(QuestionnaireInfo questionnaireInfo)
+    private String validateQuestionnaireInfo(QuestionnaireInfo questionnaireInfo)
     {
         // Validations:
         // 1. applicationSubmissionDate must be before applicationEndDate.
         // 2. dateOfEnteringSecurityScreening must be after applicationSubmissionDate.
         // 3. dateOfClearingSecurityScreening must be after dateOfEnteringSecurityScreening.
-        // 4. Ask the user to provide dateOfClearingSecurityScreening if currentApplicationState is "pass".
+        // 4. dateOfClearingSecurityScreening is provided but currentApplicationState is not passed.
+        // 5. Ask the user to provide dateOfClearingSecurityScreening if currentApplicationState is "pass".
+        // 6. dateOfEnteringSecurityScreening must be before applicationEndDate.
+        // 7. dateOfClearingSecurityScreening must be before applicationEndDate.
+        // 8. lastUpdateDateFromIrcc must be after applicationSubmissionDate.
+        // 9. Existence of the email address.
+
+        // Validation 9.
+        long countByEmail = questionnaireMapper.countByEmail(questionnaireInfo.getEmailAddress());
+        if (countByEmail > 0)
+            return "You have already submitted a questionnaire by this email.";
 
         // Validation 1.
         Date applicationSubmissionDate = questionnaireInfo.getApplicationSubmissionDate();
@@ -62,23 +73,39 @@ public class QuestionnaireService
         if (dateOfEnteringSecurityScreening.before(applicationSubmissionDate))
             return "Your application submission date is before the date of entering security screening.";
 
-        // Validation 3.
+        // Validation 3 & 4.
         Date dateOfClearingSecurityScreening = questionnaireInfo.getDateOfClearingSecurityScreening();
+        int currentApplicationState = questionnaireInfo.getCurrentApplicationState();
         if (dateOfClearingSecurityScreening != null)
         {
+            // Validation 3.
             if (dateOfClearingSecurityScreening.before(dateOfEnteringSecurityScreening))
                 return "Your date of clearing security screening is before the date of entering security screening.";
+
+            // Validation 4.
+            if (currentApplicationState != CODE_OF_PASS)
+                return "Your current application state is incorrect. You provided the date of clearing security screening, but the current application state is not passed.";
         }
 
-        // Validation 4.
-        int currentApplicationState = questionnaireInfo.getCurrentApplicationState();
+        // Validation 5.
         if (currentApplicationState == CODE_OF_PASS)
         {
             if (dateOfClearingSecurityScreening == null)
                 return "Please provide your date of clearing security screening since your state is pass now.";
         }
 
-//        questionnaireInfo.getSeparatedWithFamily();
+        // Validation 6.
+        if (dateOfEnteringSecurityScreening.after(applicationEndDate))
+            return "Your date of entering security screening is after the application end date.";
+
+        // Validation 7.
+        if (dateOfClearingSecurityScreening != null && dateOfClearingSecurityScreening.after(applicationEndDate))
+            return "Your date of clearing security screening is after the application end date.";
+
+        // Validation 8.
+        Date lastUpdateDateFromIrcc = questionnaireInfo.getLastUpdateDateFromIrcc();
+        if (lastUpdateDateFromIrcc.before(applicationSubmissionDate))
+            return "Your last update date is before the application submission date.";
 
         return null;
     }

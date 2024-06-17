@@ -8,18 +8,17 @@ import javax.mail.internet.MimeMultipart;
 import java.util.Date;
 import java.util.Properties;
 
-/**
- * @author Tomorrow
- * @date 2020/11/2 17:41
- */
-public class Gmail
+public class GmailDemo
 {
+    public static final String SSL_FACTORY = "javax.net.ssl.SSLSocketFactory";
+
     /*
-     * gmail邮箱SSL方式
+     * Send email through Gmail, SSL.
      */
-    private static void gmailssl(Properties props)
+    private static Properties gmailSsl()
     {
-        final String SSL_FACTORY = "javax.net.ssl.SSLSocketFactory";
+        Properties props = new Properties();
+
         props.put("mail.debug", "true");
         props.put("mail.smtp.host", "smtp.gmail.com");
         props.put("mail.smtp.ssl.enable", "true");
@@ -27,15 +26,22 @@ public class Gmail
         props.put("mail.smtp.port", "465");
         props.put("mail.smtp.socketFactory.port", "465");
         props.put("mail.smtp.auth", "true");
+
+        return props;
     }
 
-    //gmail邮箱的TLS方式
-    private static void gmailtls(Properties props)
+    /**
+     * Send email through Gmail, TLS.
+     * @return
+     */
+    private static Properties gmailTls()
     {
+        Properties props = new Properties();
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
         props.put("mail.smtp.host", "smtp.gmail.com");
         props.put("mail.smtp.port", "587");
+        return props;
     }
 
     /**
@@ -44,10 +50,9 @@ public class Gmail
     public static boolean sendEmail(String sender, String password, String receiver, String content) throws Exception
     {
         //1.创建一封邮件的实例对象
-        Properties props = new Properties();
         //选择ssl方式
-        gmailtls(props);
-//        gmailssl(props);
+        Properties props = gmailTls();
+//        Properties props = gmailSsl();
 
         // 当做多商户的时候需要使用getInstance, 如果只是一个邮箱发送的话就用getDefaultInstance
         // Session.getDefaultInstance 会将username,password保存在session会话中
@@ -105,7 +110,7 @@ public class Gmail
         String content = "<p>亲爱的用户:</p>" +
                 "<p>&nbsp; &nbsp; 该邮件为测试邮件（修改密码）:</p>" +
                 "<p>&nbsp;&nbsp;&nbsp;&nbsp;\u200B" + 1234 + "&nbsp;(为了保障您帐号的安全性，请尽快修改密码)</p>" +
-                "<p><br></p><p>该邮件为系统自动发送, 请勿进行回复!</p>" +
+                "<p><br></p><p>You’re almost there! Check your email for the verification link.</p>" +
                 "<p><br></p>";
 
         boolean mimeMessage = sendEmail(sender, password, receiverEmail, content);

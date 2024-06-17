@@ -137,4 +137,9 @@ public class QuestionnaireResult
      * The last update date from IRCC.
      */
     private Date lastUpdateDateFromIrcc;
+
+    /**
+     * Submission date of the questionnaire.
+     */
+    private Date submissionDate;
 }

@@ -11,6 +11,11 @@ import java.util.Date;
 public class QuestionnaireInfo
 {
     /**
+     * Selected language.
+     */
+    private String language;
+
+    /**
      * Email of the user.
      */
     @Email(message = "You must provide a valid email address.")

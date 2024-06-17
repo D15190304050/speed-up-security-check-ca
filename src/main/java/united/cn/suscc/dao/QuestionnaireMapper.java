@@ -7,5 +7,6 @@ import united.cn.suscc.domain.entities.QuestionnaireResult;
 public interface QuestionnaireMapper
 {
     int insert(QuestionnaireResult questionnaireResult);
+    long countByEmail(String emailAddress);
     long getAverageWaitingDays();
 }

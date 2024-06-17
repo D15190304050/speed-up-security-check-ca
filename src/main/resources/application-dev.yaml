@@ -5,3 +5,10 @@ spring:
             url: jdbc:mysql://localhost:3306/security_screening?useUnicode=true&characterEncoding=utf8
             username: DinoStark
             password: non-feeling
+
+mail:
+    sender: iamnotyourspy@gmail.com
+    password: kvhq jqeu ilms qwhb
+
+front-end-address:
+    base: http://localhost:3400
