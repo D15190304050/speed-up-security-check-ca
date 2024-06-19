@@ -2,7 +2,9 @@ package united.cn.suscc.services;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import united.cn.suscc.commons.ServiceResponse;
 import united.cn.suscc.constants.LocaleCodes;
 import united.cn.suscc.dao.QuestionnaireOptionMapper;
@@ -18,6 +20,9 @@ import java.util.List;
 @Service
 public class QuestionnaireOptionsService
 {
+    @Value("${secret-for-updating}")
+    private String secretForUpdating;
+
     @Autowired
     private QuestionnaireOptionMapper questionnaireOptionMapper;
 
@@ -67,5 +72,19 @@ public class QuestionnaireOptionsService
     public ServiceResponse<List<LocaleQuestionnaireOption>> getAllOptionsFromCache()
     {
         return ServiceResponse.buildSuccessResponse(QuestionnaireOptionsHolder.getLocaleQuestionnaireOptions());
+    }
+
+    public ServiceResponse<Boolean> refreshOptions(String secret)
+    {
+        if (!StringUtils.hasText(secret))
+            return ServiceResponse.buildErrorResponse(-2, "Please provide correct secret for refreshing options.");
+
+        if (!secretForUpdating.equals(secret))
+            return ServiceResponse.buildErrorResponse(-2, "Please provide correct secret for refreshing options.");
+
+        List<LocaleQuestionnaireOption> allOptions = getAllOptionsFromDb();
+        QuestionnaireOptionsHolder.setLocaleQuestionnaireOptions(allOptions);
+
+        return ServiceResponse.buildSuccessResponse(true);
     }
 }

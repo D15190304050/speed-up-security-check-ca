@@ -12,3 +12,6 @@ mail:
 
 front-end-address:
     base: http://localhost:3400
+
+secret-for-updating:
+    ThisIsPowerVergil

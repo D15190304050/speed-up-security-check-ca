@@ -27,10 +27,17 @@
                 #{state})
     </insert>
 
-    <select id="getExpirationTimeByEmailAndCode" resultType="java.util.Date">
-        SELECT expiration_time
+    <select id="getStateTimeByEmailAndCode" resultType="int">
+        SELECT state
         FROM `email_verification_record`
         WHERE email_address = #{emailAddress}
           AND code = #{code}
     </select>
+
+    <update id="updateVerificationState">
+        UPDATE `email_verification_record`
+        SET state = #{state}, update_time = NOW()
+        WHERE email_address = #{emailAddress}
+          AND code = #{code}
+    </update>
 </mapper>

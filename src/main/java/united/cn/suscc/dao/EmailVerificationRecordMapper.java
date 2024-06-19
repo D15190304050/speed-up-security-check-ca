@@ -10,5 +10,6 @@ import java.util.Date;
 public interface EmailVerificationRecordMapper
 {
     long insert(EmailVerificationRecord emailVerificationRecord);
-    Date getExpirationTimeByEmailAndCode(@Param("emailAddress") String emailAddress, @Param("code") String code);
+    int getStateTimeByEmailAndCode(@Param("emailAddress") String emailAddress, @Param("code") String code);
+    long updateVerificationState(@Param("emailAddress") String emailAddress, @Param("code") String code, @Param("state") int state);
 }

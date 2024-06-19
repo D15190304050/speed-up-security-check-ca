@@ -95,7 +95,7 @@ public class GmailService
     private String getVerificationLinkCode(String receiverEmailAddress)
     {
         String uuid = UUID.randomUUID().toString();
-        String emailAddressWithUuid = receiverEmailAddress + "?" + uuid;
+        String emailAddressWithUuid = receiverEmailAddress + EmailLinkVerificationService.EMAIL_CODE_SEPARATOR + uuid;
         return Base64.getEncoder().encodeToString(emailAddressWithUuid.getBytes(StandardCharsets.UTF_8));
     }
 
@@ -114,6 +114,7 @@ public class GmailService
         emailVerificationRecord.setEmailAddress(receiverEmailAddress);
         emailVerificationRecord.setCode(verificationLinkCode);
         emailVerificationRecord.setCreationTime(now);
+        emailVerificationRecord.setUpdateTime(now);
         emailVerificationRecord.setExpirationTime(expirationDate);
         emailVerificationRecord.setState(0);
 

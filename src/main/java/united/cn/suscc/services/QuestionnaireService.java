@@ -1,5 +1,6 @@
 package united.cn.suscc.services;
 
+import freemarker.template.TemplateException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,9 @@ import united.cn.suscc.domain.dtos.QuestionnaireInfo;
 import united.cn.suscc.commons.ServiceResponse;
 import united.cn.suscc.domain.entities.QuestionnaireResult;
 
+import javax.mail.MessagingException;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.Date;
 
 @Slf4j
@@ -23,9 +26,12 @@ public class QuestionnaireService
     public static final int CODE_OF_PASS = 2;
 
     @Autowired
+    private GmailService gmailService;
+
+    @Autowired
     private QuestionnaireMapper questionnaireMapper;
 
-    public ServiceResponse<Boolean> submitQuestionnaire(@Valid QuestionnaireInfo questionnaireInfo)
+    public ServiceResponse<Boolean> submitQuestionnaire(@Valid QuestionnaireInfo questionnaireInfo) throws TemplateException, MessagingException, IOException
     {
         log.info("questionnaireInfo = {}", JsonSerializer.serialize(questionnaireInfo));
         String errorMessage = validateQuestionnaireInfo(questionnaireInfo);
@@ -36,6 +42,11 @@ public class QuestionnaireService
         QuestionnaireResult questionnaireResult = new QuestionnaireResult();
         BeanUtils.copyProperties(questionnaireInfo, questionnaireResult);
         questionnaireMapper.insert(questionnaireResult);
+        log.info("Save questionnaire result to database successfully.");
+
+        // Send verification email.
+        gmailService.sendVerificationEmail(questionnaireInfo.getEmailAddress());
+        log.info("Send verification email successfully.");
 
         return ServiceResponse.buildSuccessResponse(true);
     }
@@ -95,7 +106,7 @@ public class QuestionnaireService
         }
 
         // Validation 6.
-        if (dateOfEnteringSecurityScreening.after(applicationEndDate))
+        if (applicationEndDate != null && dateOfEnteringSecurityScreening.after(applicationEndDate))
             return "Your date of entering security screening is after the application end date.";
 
         // Validation 7.
