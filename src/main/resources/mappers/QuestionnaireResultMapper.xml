@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="united.cn.suscc.dao.QuestionnaireMapper">
+<mapper namespace="united.cn.suscc.dao.QuestionnaireResultMapper">
     <resultMap id="QuestionnaireResultMap" type="united.cn.suscc.domain.entities.QuestionnaireResult">
         <id property="id" column="id"/>
         <result property="emailAddress" column="email_address"/>
@@ -29,6 +29,11 @@
         <result property="estimatedSalaryInCad" column="estimated_salary_in_cad"/>
         <result property="lastUpdateDateFromIrcc" column="last_update_date_from_ircc"/>
         <result property="submissionDate" column="submission_date"/>
+    </resultMap>
+
+    <resultMap id="AverageWaitingDaysByApplicationTypeResultMap" type="united.cn.suscc.domain.dtos.AverageWaitingDaysByApplicationType">
+        <result property="applicationType" column="application_type"/>
+        <result property="averageWaitingDays" column="average_waiting_days"/>
     </resultMap>
 
     <insert id="insert">
@@ -91,8 +96,16 @@
         WHERE email_address = #{emailAddress}
     </select>
 
-    <select id="getAverageWaitingDays" resultType="long">
-        SELECT AVG(DATEDIFF(`application_submission_date`, IFNULL(`application_end_date`, NOW())))
+    <select id="getAverageWaitingDaysByApplicationType" resultMap="AverageWaitingDaysByApplicationTypeResultMap">
+        SELECT `application_type`,
+               AVG(DATEDIFF(IFNULL(`application_end_date`, NOW()), `application_submission_date`)) average_waiting_days
+        FROM `questionnaire_result`
+        GROUP BY `application_type`
+        ORDER BY average_waiting_days DESC
+    </select>
+
+    <select id="getAverageWaitingDays" resultType="java.math.BigDecimal">
+        SELECT AVG(DATEDIFF(IFNULL(`application_end_date`, NOW()), `application_submission_date`))
         FROM `questionnaire_result`
     </select>
 </mapper>

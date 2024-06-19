@@ -8,20 +8,24 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import united.cn.suscc.commons.JsonSerializer;
-import united.cn.suscc.dao.QuestionnaireMapper;
+import united.cn.suscc.dao.QuestionnaireResultMapper;
+import united.cn.suscc.domain.dtos.AverageWaitingDaysByApplicationType;
 import united.cn.suscc.domain.dtos.QuestionnaireInfo;
 import united.cn.suscc.commons.ServiceResponse;
+import united.cn.suscc.domain.dtos.WaitingDaysResponse;
 import united.cn.suscc.domain.entities.QuestionnaireResult;
 
 import javax.mail.MessagingException;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 @Slf4j
 @Service
 @Validated
-public class QuestionnaireService
+public class QuestionnaireResultService
 {
     public static final int CODE_OF_PASS = 2;
 
@@ -29,7 +33,7 @@ public class QuestionnaireService
     private GmailService gmailService;
 
     @Autowired
-    private QuestionnaireMapper questionnaireMapper;
+    private QuestionnaireResultMapper questionnaireResultMapper;
 
     public ServiceResponse<Boolean> submitQuestionnaire(@Valid QuestionnaireInfo questionnaireInfo) throws TemplateException, MessagingException, IOException
     {
@@ -41,7 +45,7 @@ public class QuestionnaireService
         // Save to database.
         QuestionnaireResult questionnaireResult = new QuestionnaireResult();
         BeanUtils.copyProperties(questionnaireInfo, questionnaireResult);
-        questionnaireMapper.insert(questionnaireResult);
+        questionnaireResultMapper.insert(questionnaireResult);
         log.info("Save questionnaire result to database successfully.");
 
         // Send verification email.
@@ -65,7 +69,7 @@ public class QuestionnaireService
         // 9. Existence of the email address.
 
         // Validation 9.
-        long countByEmail = questionnaireMapper.countByEmail(questionnaireInfo.getEmailAddress());
+        long countByEmail = questionnaireResultMapper.countByEmail(questionnaireInfo.getEmailAddress());
         if (countByEmail > 0)
             return "You have already submitted a questionnaire by this email.";
 
@@ -121,9 +125,15 @@ public class QuestionnaireService
         return null;
     }
 
-    public ServiceResponse<Long> getStatisticsData()
+    public ServiceResponse<WaitingDaysResponse> getStatisticsData()
     {
-        long averageWaitingDays = questionnaireMapper.getAverageWaitingDays();
-        return ServiceResponse.buildSuccessResponse(averageWaitingDays);
+        List<AverageWaitingDaysByApplicationType> averageWaitingDayOfTypes = questionnaireResultMapper.getAverageWaitingDaysByApplicationType();
+        BigDecimal averageWaitingDays = questionnaireResultMapper.getAverageWaitingDays();
+
+        WaitingDaysResponse waitingDaysResponse = new WaitingDaysResponse();
+        waitingDaysResponse.setAverageWaitingDaysOfApplicationTypes(averageWaitingDayOfTypes);
+        waitingDaysResponse.setAverageWaitingDays(averageWaitingDays);
+
+        return ServiceResponse.buildSuccessResponse(waitingDaysResponse);
     }
 }
