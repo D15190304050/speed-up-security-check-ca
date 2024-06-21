@@ -24,7 +24,7 @@ public class EmailController
     public ServiceResponse<Boolean> trySend() throws TemplateException, MessagingException, IOException
     {
         log.info("Start to send...");
-        gmailService.sendVerificationEmail("15190304050@163.com");
+        gmailService.sendVerificationEmail("15190304050@163.com", "zh");
         return ServiceResponse.buildSuccessResponse(true);
     }
 }

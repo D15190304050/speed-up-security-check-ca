@@ -13,7 +13,7 @@ public class QuestionnaireInfo
     /**
      * Selected language.
      */
-    private String language;
+    private String currentLanguage;
 
     /**
      * Email of the user.

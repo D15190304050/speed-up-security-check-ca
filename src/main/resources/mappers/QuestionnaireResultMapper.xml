@@ -97,15 +97,21 @@
     </select>
 
     <select id="getAverageWaitingDaysByApplicationType" resultMap="AverageWaitingDaysByApplicationTypeResultMap">
-        SELECT `application_type`,
-               AVG(DATEDIFF(IFNULL(`application_end_date`, NOW()), `application_submission_date`)) average_waiting_days
-        FROM `questionnaire_result`
+        SELECT a.`application_type`,
+               AVG(DATEDIFF(IFNULL(a.`application_end_date`, NOW()), a.`application_submission_date`)) average_waiting_days
+        FROM `questionnaire_result` a
+                 INNER JOIN `email_verification_record` b
+                            ON a.email_address = b.email_address
+        WHERE b.`state` = 1
         GROUP BY `application_type`
         ORDER BY average_waiting_days DESC
     </select>
 
     <select id="getAverageWaitingDays" resultType="java.math.BigDecimal">
         SELECT AVG(DATEDIFF(IFNULL(`application_end_date`, NOW()), `application_submission_date`))
-        FROM `questionnaire_result`
+        FROM `questionnaire_result` a
+                 INNER JOIN `email_verification_record` b
+                            ON a.email_address = b.email_address
+        WHERE b.`state` = 1
     </select>
 </mapper>

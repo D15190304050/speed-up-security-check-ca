@@ -1,9 +1,12 @@
 package united.cn.suscc.services;
 
 import freemarker.template.TemplateException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
+import united.cn.suscc.commons.LocaleConverter;
 import united.cn.suscc.dao.EmailVerificationRecordMapper;
 import united.cn.suscc.domain.entities.EmailVerificationRecord;
 import united.cn.suscc.emails.EmailRenderer;
@@ -16,9 +19,13 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
+@Slf4j
 @Service
 public class GmailService
 {
+    public static final String VERIFICATION_EMAIL_TEMPLATE_NAME_PREFIX = "verification_";
+    public static final String VERIFICATION_EMAIL_TEMPLATE_NAME_SUFFIX = ".ftl";
+
     private static final Properties PROPERTIES_FOR_TTL;
 
     @Value("${mail.sender}")
@@ -32,6 +39,9 @@ public class GmailService
 
     @Value("${front-end-address.verification}")
     private String frontendPathForVerification;
+
+    @Autowired
+    private MessageSource messageSource;
 
     @Autowired
     private EmailVerificationRecordMapper emailVerificationRecordMapper;
@@ -77,7 +87,7 @@ public class GmailService
         Transport.send(msg);
     }
 
-    public void sendVerificationEmail(String receiverEmailAddress) throws TemplateException, IOException, MessagingException
+    public void sendVerificationEmail(String receiverEmailAddress, String currentLanguage) throws TemplateException, IOException, MessagingException
     {
         String verificationLinkCode = getVerificationLinkCode(receiverEmailAddress);
         String verificationLink = getVerificationLink(verificationLinkCode);
@@ -86,10 +96,13 @@ public class GmailService
 
         HashMap<String, Object> dataModel = new HashMap<>();
         dataModel.put("link", verificationLink);
-        String content = EmailRenderer.renderEmailTemplate("verification_zh.ftl", dataModel);
+        String templateName = VERIFICATION_EMAIL_TEMPLATE_NAME_PREFIX + currentLanguage + VERIFICATION_EMAIL_TEMPLATE_NAME_SUFFIX;
+        String content = EmailRenderer.renderEmailTemplate(templateName, dataModel);
 
         List<String> receivers = List.of(receiverEmailAddress);
-        sendEmail(receivers, "加拿大签证安调问卷 - 请勿回复", content);
+
+        String subject = messageSource.getMessage("email.verification.subject", null, LocaleConverter.toLanguageCountry(currentLanguage));
+        sendEmail(receivers, subject, content);
     }
 
     private String getVerificationLinkCode(String receiverEmailAddress)
