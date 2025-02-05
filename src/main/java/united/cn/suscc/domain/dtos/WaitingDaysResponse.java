@@ -9,5 +9,4 @@ import java.util.List;
 public class WaitingDaysResponse
 {
     private List<AverageWaitingDaysByApplicationType> averageWaitingDaysOfApplicationTypes;
-    private BigDecimal averageWaitingDays;
 }

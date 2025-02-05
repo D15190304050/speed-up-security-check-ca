@@ -13,5 +13,4 @@ public interface QuestionnaireResultMapper
     int insert(QuestionnaireResult questionnaireResult);
     long countByEmail(String emailAddress);
     List<AverageWaitingDaysByApplicationType> getAverageWaitingDaysByApplicationType();
-    BigDecimal getAverageWaitingDays();
 }
