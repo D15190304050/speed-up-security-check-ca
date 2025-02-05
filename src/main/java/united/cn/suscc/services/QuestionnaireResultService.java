@@ -151,9 +151,11 @@ public class QuestionnaireResultService
     public ServiceResponse<WaitingDaysResponse> getStatisticsData()
     {
         List<AverageWaitingDaysByApplicationType> averageWaitingDayOfTypes = questionnaireResultMapper.getAverageWaitingDaysByApplicationType();
+        BigDecimal averageWaitingDays = questionnaireResultMapper.getAverageWaitingDays();
 
         WaitingDaysResponse waitingDaysResponse = new WaitingDaysResponse();
         waitingDaysResponse.setAverageWaitingDaysOfApplicationTypes(averageWaitingDayOfTypes);
+        waitingDaysResponse.setAverageWaitingDays(averageWaitingDays);
 
         return ServiceResponse.buildSuccessResponse(waitingDaysResponse);
     }
