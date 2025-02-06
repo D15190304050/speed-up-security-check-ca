@@ -3,12 +3,28 @@ spring:
         druid:
             driver-class-name: com.mysql.cj.jdbc.Driver
             url: jdbc:mysql://localhost:3306/security_screening?useUnicode=true&characterEncoding=utf8
-            username: DinoStark
-            password: non-feeling
+            username: root
+            password: 2001
 
-mail:
-    sender: iamnotyourspy@gmail.com
-    password: kvhq jqeu ilms qwhb
+    mail:
+        host: smtp.qq.com
+        port: 465
+        username: 1024069319@qq.com
+        password: iyrbonyzmyahbcji
+        protocol: smtp
+        test-connection: true
+        properties:
+            mail:
+                smtp:
+                    auth: true
+                    starttls:
+                        enable: false
+                    ssl:
+                        enable: true
+                properties:
+                    mail:
+                        debug: true
+
 
 front-end-address:
     base: http://localhost:3400
