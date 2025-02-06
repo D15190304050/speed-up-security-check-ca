@@ -66,6 +66,7 @@ public class GmailService
                     }
                 });
 
+        // Some comment here.
         MimeMessage msg = new MimeMessage(session);
         msg.setFrom(new InternetAddress(sender));
         for (String receiver : receivers)
