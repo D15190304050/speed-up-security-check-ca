@@ -28,4 +28,5 @@ CREATE TABLE `questionnaire_result`
     `current_salary_in_cad_per_year`           DECIMAL(10, 2)                                         DEFAULT NULL COMMENT '',
     `estimated_salary_in_cad_per_year`         DECIMAL(10, 2)                                         DEFAULT NULL COMMENT '',
     `last_update_date_from_ircc`               DATETIME                                               DEFAULT NULL COMMENT ''
-);
+)
+    ENGINE = InnoDB;
