@@ -5,14 +5,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import united.cn.suscc.commons.LocaleConverter;
 import united.cn.suscc.dao.EmailVerificationRecordMapper;
 import united.cn.suscc.domain.entities.EmailVerificationRecord;
 import united.cn.suscc.emails.EmailRenderer;
 
-import javax.mail.*;
-import javax.mail.internet.*;
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
@@ -21,18 +23,14 @@ import java.util.*;
 
 @Slf4j
 @Service
-public class GmailService
+public class EmailService
 {
+
     public static final String VERIFICATION_EMAIL_TEMPLATE_NAME_PREFIX = "verification_";
     public static final String VERIFICATION_EMAIL_TEMPLATE_NAME_SUFFIX = ".ftl";
 
-    private static final Properties PROPERTIES_FOR_TTL;
-
-    @Value("${mail.sender}")
+    @Value("${spring.mail.username}")
     private String sender;
-
-    @Value("${mail.password}")
-    private String password;
 
     @Value("${front-end-address.base}")
     private String frontendAddress;
@@ -43,51 +41,28 @@ public class GmailService
     @Autowired
     private MessageSource messageSource;
 
+    @Autowired(required = false)
+    private JavaMailSender mailSender;
+
     @Autowired
     private EmailVerificationRecordMapper emailVerificationRecordMapper;
 
-    static
-    {
-        PROPERTIES_FOR_TTL = new Properties();
-        PROPERTIES_FOR_TTL.put("mail.smtp.auth", "true");
-        PROPERTIES_FOR_TTL.put("mail.smtp.starttls.enable", "true");
-        PROPERTIES_FOR_TTL.put("mail.smtp.host", "smtp.gmail.com");
-        PROPERTIES_FOR_TTL.put("mail.smtp.port", "587");
-    }
-
     public void sendEmail(List<String> receivers, String subject, String content) throws MessagingException
     {
-        Session session = Session.getInstance(PROPERTIES_FOR_TTL,
-                new Authenticator()
-                {
-                    protected PasswordAuthentication getPasswordAuthentication()
-                    {
-                        return new PasswordAuthentication(sender, password);
-                    }
-                });
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper;
 
-        MimeMessage msg = new MimeMessage(session);
-        msg.setFrom(new InternetAddress(sender));
-        for (String receiver : receivers)
-            msg.addRecipient(MimeMessage.RecipientType.TO, new InternetAddress(receiver));
+        helper = new MimeMessageHelper(message, true);
+        helper.setFrom(sender);
+        helper.setTo(receivers.toArray(new String[0]));
+        helper.setSubject(subject);
+        helper.setText(content, true);
 
-        msg.setSubject(subject, "UTF-8");
-
-        // 6. 创建文本"节点"
-        MimeBodyPart text = new MimeBodyPart();
-        text.setContent(content, "text/html;charset=UTF-8");
-
-        MimeMultipart mm_text_image = new MimeMultipart();
-        mm_text_image.addBodyPart(text);
-        mm_text_image.setSubType("related");
-
-        msg.setContent(mm_text_image);
-        msg.setSentDate(new Date());
-
-        Transport.send(msg);
+        mailSender.send(message);
+        log.info("Email sent successfully to: {}", receivers);
     }
 
-    public void sendVerificationEmail(String receiverEmailAddress, String currentLanguage) throws TemplateException, IOException, MessagingException
+    public void sendVerificationEmail(String receiverEmailAddress, String currentLanguage) throws MessagingException, TemplateException, IOException
     {
         String verificationLinkCode = getVerificationLinkCode(receiverEmailAddress);
         String verificationLink = getVerificationLink(verificationLinkCode);
@@ -96,13 +71,13 @@ public class GmailService
 
         HashMap<String, Object> dataModel = new HashMap<>();
         dataModel.put("link", verificationLink);
+
         String templateName = VERIFICATION_EMAIL_TEMPLATE_NAME_PREFIX + currentLanguage + VERIFICATION_EMAIL_TEMPLATE_NAME_SUFFIX;
-        String content = EmailRenderer.renderEmailTemplate(templateName, dataModel);
+        String emailContent = EmailRenderer.renderEmailTemplate(templateName, dataModel);
 
         List<String> receivers = List.of(receiverEmailAddress);
-
         String subject = messageSource.getMessage("email.verification.subject", null, LocaleConverter.toLanguageCountry(currentLanguage));
-        sendEmail(receivers, subject, content);
+        sendEmail(receivers, subject, emailContent);
     }
 
     private String getVerificationLinkCode(String receiverEmailAddress)

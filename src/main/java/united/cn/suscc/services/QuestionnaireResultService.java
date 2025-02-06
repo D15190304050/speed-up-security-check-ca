@@ -37,7 +37,7 @@ public class QuestionnaireResultService
     private MessageSource messageSource;
 
     @Autowired
-    private GmailService gmailService;
+    private EmailService emailService;
 
     @Autowired
     private QuestionnaireResultMapper questionnaireResultMapper;
@@ -56,7 +56,7 @@ public class QuestionnaireResultService
         log.info("Save questionnaire result to database successfully.");
 
         // Send verification email.
-        gmailService.sendVerificationEmail(questionnaireInfo.getEmailAddress(), questionnaireInfo.getCurrentLanguage());
+        emailService.sendVerificationEmail(questionnaireInfo.getEmailAddress(), questionnaireInfo.getCurrentLanguage());
         log.info("Send verification email successfully.");
 
         return ServiceResponse.buildSuccessResponse(true);
