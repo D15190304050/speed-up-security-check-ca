@@ -40,11 +40,10 @@ public class ScheduledNotificationService
     @Autowired
     private ThreadPoolTaskExecutor emailTaskExecutor;
 
-    @Scheduled(cron = "0 0 10 * * MON")
+    @Scheduled(cron = "0 0 10 * * MON", zone = "Asia/Shanghai")
     public void sendScheduledEmail() throws MessagingException, TemplateException, IOException
     {
         List<EmailAddressAndWaitingDaysInfo> emailAddressAndWaitingDaysInfoList = questionnaireResultMapper.getEmailAddressAndWaitingDays();
-        log.info(emailAddressAndWaitingDaysInfoList.toString());
 
         for (EmailAddressAndWaitingDaysInfo user : emailAddressAndWaitingDaysInfoList)
         {
@@ -64,7 +63,8 @@ public class ScheduledNotificationService
                     String emailContent = EmailRenderer.renderEmailTemplate(TEMPLATE_NAME, dataModel);
 
                     emailService.sendEmail(List.of(emailAddress), EMAIL_SUBJECT, emailContent);
-                } catch (Exception e)
+                }
+                catch (Exception e)
                 {
                     log.error("Error in sending scheduled emails with ", e);
                 }

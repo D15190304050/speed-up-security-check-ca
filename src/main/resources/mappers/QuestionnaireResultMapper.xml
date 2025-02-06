@@ -130,9 +130,9 @@
                q.`application_submission_date`,
                DATEDIFF(IFNULL(q.`application_end_date`, NOW()), q.`application_submission_date`) AS `waiting_days`
         FROM `questionnaire_result` q
-                 INNER JOIN (SELECT DISTINCT `email_address`
-                             FROM email_verification_record
-                             WHERE state = 1) e
-                            ON q.email_address = e.email_address
+        WHERE q.email_address
+                  IN (SELECT DISTINCT `email_address`
+                      FROM email_verification_record
+                      WHERE state = 1)
     </select>
 </mapper>
