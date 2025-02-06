@@ -36,6 +36,12 @@
         <result property="averageWaitingDays" column="average_waiting_days"/>
     </resultMap>
 
+    <resultMap id="EmailAddressAndWaitingDaysTypeResultMap" type="united.cn.suscc.domain.dtos.EmailAddressAndWaitingDaysInfo">
+        <result property="emailAddress" column="email_address"/>
+        <result property="waitingDays" column="waiting_days"/>
+        <result property="applicationSubmissionDate" column="application_submission_date"/>
+    </resultMap>
+
     <insert id="insert">
         INSERT INTO `questionnaire_result`
         (email_address,
@@ -116,5 +122,17 @@
             WHERE `state` = 1
         ) b
                             ON a.email_address = b.email_address;
+    </select>
+
+    <select id="getEmailAddressAndWaitingDays"
+            resultMap="EmailAddressAndWaitingDaysTypeResultMap">
+        SELECT q.`email_address`,
+               q.`application_submission_date`,
+               DATEDIFF(IFNULL(q.`application_end_date`, NOW()), q.`application_submission_date`) AS `waiting_days`
+        FROM `questionnaire_result` q
+                 INNER JOIN (SELECT DISTINCT `email_address`
+                             FROM email_verification_record
+                             WHERE state = 1) e
+                            ON q.email_address = e.email_address
     </select>
 </mapper>
