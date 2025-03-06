@@ -23,7 +23,7 @@ import java.util.*;
 @Service
 public class GmailService
 {
-    // abc
+    // abcdef
     public static final String VERIFICATION_EMAIL_TEMPLATE_NAME_PREFIX = "verification_";
     public static final String VERIFICATION_EMAIL_TEMPLATE_NAME_SUFFIX = ".ftl";
 
