@@ -1,10 +1,10 @@
 spring:
     datasource:
-        druid:
+        url: jdbc:mysql://localhost:3309/security_screening?useUnicode=true&characterEncoding=utf8
+        hikari:
             driver-class-name: com.mysql.cj.jdbc.Driver
-            url: jdbc:mysql://localhost:3306/security_screening?useUnicode=true&characterEncoding=utf8
-            username: DinoStark
-            password: non-feeling
+            username: root
+            password: 123456
 
 mail:
     sender: iamnotyourspy@gmail.com

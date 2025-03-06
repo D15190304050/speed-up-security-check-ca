@@ -18,7 +18,7 @@ import united.cn.suscc.domain.dtos.WaitingDaysResponse;
 import united.cn.suscc.domain.entities.QuestionnaireResult;
 
 import javax.mail.MessagingException;
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Date;
