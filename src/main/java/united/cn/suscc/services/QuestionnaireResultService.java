@@ -21,6 +21,7 @@ import javax.mail.MessagingException;
 import jakarta.validation.Valid;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -155,6 +156,18 @@ public class QuestionnaireResultService
         WaitingDaysResponse waitingDaysResponse = new WaitingDaysResponse();
         waitingDaysResponse.setAverageWaitingDaysOfApplicationTypes(averageWaitingDayOfTypes);
 
+        BigDecimal totalSum = BigDecimal.ZERO;
+        int totalCount =0;
+        for(AverageWaitingDaysByApplicationType type : averageWaitingDayOfTypes){
+            totalSum=totalSum.add(type.getAverageWaitingDays());
+            totalCount ++;
+        }
+        if (totalCount > 0) {
+            BigDecimal totalAverage  = totalSum.divide(new BigDecimal(totalCount), 0, RoundingMode.HALF_UP);
+            waitingDaysResponse.setAverageWaitingDays(totalAverage);
+        }else {
+            waitingDaysResponse.setAverageWaitingDays(BigDecimal.ZERO);
+        }
         return ServiceResponse.buildSuccessResponse(waitingDaysResponse);
     }
 }
