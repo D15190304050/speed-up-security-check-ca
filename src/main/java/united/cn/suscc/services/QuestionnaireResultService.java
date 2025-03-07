@@ -152,22 +152,29 @@ public class QuestionnaireResultService
     public ServiceResponse<WaitingDaysResponse> getStatisticsData()
     {
         List<AverageWaitingDaysByApplicationType> averageWaitingDayOfTypes = questionnaireResultMapper.getAverageWaitingDaysByApplicationType();
+        BigDecimal averageWaitingDays = questionnaireResultMapper.getAverageWaitingDays();
 
         WaitingDaysResponse waitingDaysResponse = new WaitingDaysResponse();
         waitingDaysResponse.setAverageWaitingDaysOfApplicationTypes(averageWaitingDayOfTypes);
+        waitingDaysResponse.setAverageWaitingDays(averageWaitingDays);
 
-        BigDecimal totalSum = BigDecimal.ZERO;
-        int totalCount =0;
-        for(AverageWaitingDaysByApplicationType type : averageWaitingDayOfTypes){
-            totalSum=totalSum.add(type.getAverageWaitingDays());
-            totalCount ++;
-        }
-        if (totalCount > 0) {
-            BigDecimal totalAverage  = totalSum.divide(new BigDecimal(totalCount), 0, RoundingMode.HALF_UP);
-            waitingDaysResponse.setAverageWaitingDays(totalAverage);
-        }else {
-            waitingDaysResponse.setAverageWaitingDays(BigDecimal.ZERO);
-        }
+//        BigDecimal totalSum = BigDecimal.ZERO;
+//        int totalCount = 0;
+//        averageWaitingDayOfTypes.size();
+//        for (AverageWaitingDaysByApplicationType type : averageWaitingDayOfTypes)
+//        {
+//            totalSum = totalSum.add(type.getAverageWaitingDays());
+//            totalCount++;
+//        }
+//        if (totalCount > 0)
+//        {
+//            BigDecimal totalAverage = totalSum.divide(new BigDecimal(totalCount), 0, RoundingMode.HALF_UP);
+//            waitingDaysResponse.setAverageWaitingDays(totalAverage);
+//        }
+//        else
+//        {
+//            waitingDaysResponse.setAverageWaitingDays(BigDecimal.ZERO);
+//        }
         return ServiceResponse.buildSuccessResponse(waitingDaysResponse);
     }
 }
